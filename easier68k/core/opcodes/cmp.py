@@ -220,7 +220,7 @@ class Cmp(Opcode):
         :return:
         """
         # don't bother with param invalid modes
-        return opcode_util.n_param_from_str(
+        return opcode_util.n_param_is_valid(
             command,
             parameters,
             "CMP",
