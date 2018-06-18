@@ -227,8 +227,7 @@ class MemoryValue:
             return self.get_value_signed() == other.get_value_signed()
         elif isinstance(other, int):
             return self.get_value_signed() == other
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __add__(self, other):
         """
@@ -247,8 +246,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_signed_int(total_value)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __sub__(self, other):
         """
@@ -266,8 +264,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(self.__mask_value_for_length(self.length, val))
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __gt__(self, other):
         """
@@ -279,8 +276,7 @@ class MemoryValue:
             return self.get_value_signed() > other.get_value_signed()
         elif isinstance(other, int):
             return self.get_value_signed() > other
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __lt__(self, other):
         """
@@ -292,8 +288,7 @@ class MemoryValue:
             return self.get_value_signed() < other.get_value_signed()
         elif isinstance(other, int):
             return self.get_value_signed() < other
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __le__(self, other):
         """
@@ -305,8 +300,7 @@ class MemoryValue:
             return self.get_value_signed() <= other.get_value_signed()
         elif isinstance(other, int):
             return self.get_value_signed() <= other
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __ne__(self, other):
         """
@@ -318,8 +312,7 @@ class MemoryValue:
             return self.get_value_signed() != other.get_value_signed()
         elif isinstance(other, int):
             return self.get_value_signed() != other
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __ge__(self, other):
         """
@@ -331,8 +324,7 @@ class MemoryValue:
             return self.get_value_signed() >= other.get_value_signed()
         elif isinstance(other, int):
             return self.get_value_signed() >= other
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __str__(self):
         """
@@ -366,8 +358,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def lsr(self, other):
         """
@@ -387,8 +378,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __lshift__(self, other):
         """
@@ -408,8 +398,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_signed_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __rshift__(self, other):
         """
@@ -430,8 +419,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_signed_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __xor__(self, other):
         """
@@ -451,8 +439,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_signed_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __invert__(self):
         """
@@ -490,8 +477,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __and__(self, other):
         """
@@ -511,8 +497,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __floordiv__(self, other):
         """
@@ -532,8 +517,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __mul__(self, other):
         """
@@ -553,8 +537,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __mod__(self, other):
         """
@@ -574,8 +557,7 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __pow__(self, power, modulo=None):
         """
@@ -596,5 +578,4 @@ class MemoryValue:
             n = MemoryValue(self.length)
             n.set_value_unsigned_int(val)
             return n
-        else:
-            return NotImplemented
+        return NotImplemented
