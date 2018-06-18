@@ -4,5 +4,6 @@ __all__ = [
     'test_trap',
     'test_or',
     'test_add',
-    'test_cmp'
+    'test_cmp',
+    'test_adda'
 ]
