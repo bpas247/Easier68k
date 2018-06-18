@@ -87,7 +87,7 @@ class Cmp(Opcode):
         set the condition codes accordingly. The destination must be a
         data register. The destination is not modified by this instruction.
 
-        :param simulator:
+        :param simulator: the simulator that this opcode is being run on
         :return:
         """
 
@@ -150,7 +150,8 @@ class Cmp(Opcode):
     @classmethod
     def get_word_length(cls, command: str, parameters: str) -> int:
         """
-        Gets the length of this command in memory
+        Gets the length of this command in memory, including the length of
+        the single opcode and the length of any immediate parameter values
 
         >>> Cmp.get_word_length('CMP', 'D0, D1')
         1
