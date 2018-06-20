@@ -198,17 +198,19 @@ class MemoryValue:
         """
         return bytearray(self.__bytes__())
 
-    def get_msb(self):
+    def get_msb(self, size: OpSize=None):
         """
         Get the most significant bit indicating that the value is negative
         :return:
         """
+        if size is None:
+            size = self.length
 
         # default mask is one byte
         mask = 0x80
-        if self.length is OpSize.WORD:
+        if size is OpSize.WORD:
             mask = 0x8000
-        elif self.length is OpSize.LONG:
+        elif size is OpSize.LONG:
             mask = 0x80000000
 
         # determine if the unsigned value MSB is set to 1

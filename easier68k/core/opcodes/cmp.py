@@ -103,8 +103,11 @@ class Cmp(Opcode):
                               unsigned_int=mask_value_for_length(self.size, comp_mv.get_value_unsigned()))
 
         overflow = False
-        # if the two values have the same MSB
-        if src_val.get_negative() == dest_val.get_negative():
+        print('src', src_val.get_msb(self.size), 'dest', dest_val.get_msb(self.size))
+
+        # if the two values have the same MSB (in the size of this opcode)
+        if src_val.get_msb(self.size) == dest_val.get_msb(self.size):
+            print('aaa')
             # and after subtracting have a different MSB
             # then there has been an overflow
             if src_val.get_negative() != comp_mv.get_negative():
