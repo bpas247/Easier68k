@@ -35,9 +35,9 @@ def test_cmp():
     assert sim.get_program_counter_value() == (0x1000 + 2)
 
     # check that the CCR bits were set correctly
-    # assert sim.get_condition_status_code(ConditionStatusCode.C) is False
-    # assert sim.get_condition_status_code(ConditionStatusCode.V) is False
-    # assert sim.get_condition_status_code(ConditionStatusCode.Z) is False
-    # assert sim.get_condition_status_code(ConditionStatusCode.N) is False
-    # assert sim.get_condition_status_code(ConditionStatusCode.X) is False
+    assert sim.get_condition_status_code(ConditionStatusCode.C) is True
+    assert sim.get_condition_status_code(ConditionStatusCode.V) is True
+    assert sim.get_condition_status_code(ConditionStatusCode.Z) is False
+    assert sim.get_condition_status_code(ConditionStatusCode.N) is True
+    assert sim.get_condition_status_code(ConditionStatusCode.X) is False
 

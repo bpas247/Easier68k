@@ -9,7 +9,7 @@ from ...core.util import opcode_util
 from ..util.parsing import parse_assembly_parameter
 from ..models.assembly_parameter import AssemblyParameter
 from ..enum.condition_status_code import ConditionStatusCode
-from ..models.memory_value import MemoryValue
+from ..models.memory_value import MemoryValue, mask_value_for_length
 
 # foward declaration for specifying the return type
 class Cmp(Opcode):
@@ -95,8 +95,12 @@ class Cmp(Opcode):
         src_val = self.src.get_value(simulator, self.size.get_number_of_bytes())
         dest_val = self.dest.get_value(simulator, self.size.get_number_of_bytes())
 
-        comparision = src_val.get_value_signed() - dest_val.get_value_signed()
+        comparison = src_val.get_value_signed() - dest_val.get_value_signed()
         comp_mv = src_val - dest_val
+
+        # mask out only the bits we need/want
+        comp_mv = MemoryValue(self.size,
+                              unsigned_int=mask_value_for_length(self.size, comp_mv.get_value_unsigned()))
 
         overflow = False
         # if the two values have the same MSB
@@ -108,10 +112,12 @@ class Cmp(Opcode):
 
         # ignore the carry bit
 
+        print(hex(comp_mv.get_value_unsigned()))
+
         # set negative w/ (dest - src) < 0
-        simulator.set_condition_status_code(ConditionStatusCode.Negative, comparision < 0)
+        simulator.set_condition_status_code(ConditionStatusCode.Negative, comp_mv.get_negative())
         # set zero w/ (dest_val - src_val) == 0
-        simulator.set_condition_status_code(ConditionStatusCode.Zero, comparision == 0)
+        simulator.set_condition_status_code(ConditionStatusCode.Zero, comparison == 0)
         # set if an overflow occurs
         simulator.set_condition_status_code(ConditionStatusCode.Overflow, overflow)
         # set if a borrow occurs

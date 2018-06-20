@@ -17,6 +17,22 @@ integers, hex strings and byte arrays.
 from ..enum.op_size import OpSize
 
 
+def mask_value_for_length(size: OpSize, unsigned_value: int) -> int:
+    """
+    Masks an unsigned value to a certain size
+    :param size:
+    :param unsigned_value:
+    :return:
+    """
+    if size is OpSize.BYTE:
+        return 0xFF & unsigned_value
+    if size is OpSize.WORD:
+        return 0xFFFF & unsigned_value
+    if size is OpSize.LONG:
+        return 0xFFFFFFFF & unsigned_value
+    return None
+
+
 class MemoryValue:
     """
     Representation of some value in memory
@@ -200,22 +216,6 @@ class MemoryValue:
         # has some value set
         return self.unsigned_value & mask > 0
 
-    def __mask_value_for_length(self, size: OpSize, unsigned_value: int) -> int:
-        """
-        Masks an unsigned value to a certain size
-        :param size:
-        :param unsigned_value:
-        :return:
-        """
-        if size is OpSize.BYTE:
-            return 0xFF & unsigned_value
-        if size is OpSize.WORD:
-            return 0xFFFF & unsigned_value
-        if size is OpSize.LONG:
-            return 0xFFFFFFFF & unsigned_value
-        return None
-
-
     def __eq__(self, other) -> bool:
         """
         Equals, compares to see that the value is the same
@@ -257,12 +257,12 @@ class MemoryValue:
         if isinstance(other, MemoryValue):
             val = self.get_value_unsigned() - other.get_value_unsigned()
             n = MemoryValue(self.length)
-            n.set_value_unsigned_int(self.__mask_value_for_length(self.length, val))
+            n.set_value_unsigned_int(mask_value_for_length(self.length, val))
             return n
         elif isinstance(other, int):
             val = self.get_value_unsigned() - other
             n = MemoryValue(self.length)
-            n.set_value_unsigned_int(self.__mask_value_for_length(self.length, val))
+            n.set_value_unsigned_int(mask_value_for_length(self.length, val))
             return n
         return NotImplemented
 
