@@ -76,12 +76,18 @@ class Cmpi(Opcode):
         elif self.size == OpSize.LONG:
             ret_opcode |= 0b10 << 6
 
-        # add the ea bits for the destination
-        # with mode first
-        ret_opcode |= ea_mode_bin.parse_from_ea_mode_modefirst(self.dest)
+        ret_opcode |= ea_mode_bin.parse_from_ea_mode_modefirst(self.dest) << 0
 
-        # convert the int to bytes, then to a mutable bytearray
-        return bytearray(ret_opcode.to_bytes(2, byteorder='big', signed=False))
+        ret_bytes = bytearray(ret_opcode.to_bytes(2, byteorder='big', signed=False))
+
+        # extend to include source
+        ret_bytes.extend(opcode_util.ea_to_binary_post_op(self.src, self.size).get_value_bytearray())
+
+        # extend to include destination (if needed)
+        if self.dest.mode == EAMode.IMM or self.dest.mode == EAMode.AWA or self.dest.mode == EAMode.ALA:
+            ret_bytes.extend(opcode_util.ea_to_binary_post_op(self.dest, self.size).get_value_bytearray())
+
+        return ret_bytes
 
     def execute(self, simulator: M68K):
         """
