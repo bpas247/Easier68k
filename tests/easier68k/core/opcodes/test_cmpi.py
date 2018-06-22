@@ -147,7 +147,7 @@ def test_cmpi_disassembles():
     assert sim.get_condition_status_code(ConditionStatusCode.C) is False
     assert sim.get_condition_status_code(ConditionStatusCode.V) is False
     assert sim.get_condition_status_code(ConditionStatusCode.Z) is False
-    assert sim.get_condition_status_code(ConditionStatusCode.N) is False
+    assert sim.get_condition_status_code(ConditionStatusCode.N) is True
     assert sim.get_condition_status_code(ConditionStatusCode.X) is False
 
 
