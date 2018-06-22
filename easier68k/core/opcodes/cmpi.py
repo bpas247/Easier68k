@@ -101,7 +101,21 @@ class Cmpi(Opcode):
         :return:
         """
 
-        print("TODO")   # TODO Implement
+        # set the number of bytes to increment equal to the length of the
+        # instruction (1 word)
+        to_increment = OpSize.WORD.value
+
+        # Increment by size
+        to_increment += self.size.value
+
+        # any additional increments by destination value
+        if self.dest.mode is EAMode.AbsoluteLongAddress:
+            to_increment += OpSize.LONG.value
+        if self.dest.mode is EAMode.AbsoluteWordAddress:
+            to_increment += OpSize.WORD.value
+
+        # increment PC
+        simulator.increment_program_counter(to_increment)
 
     def __str__(self):
         return 'CMPI Size {}, Src {}, Dest {}'.format(self.size, self.src, self.dest)
