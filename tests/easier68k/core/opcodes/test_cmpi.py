@@ -226,11 +226,11 @@ def test_add_assemble():
     Check that assembly is the same as the input
 
     Example case used:
-        CMPI.W #$FFFF,(A4)+
+        CMPI.W #$123,D3
     """
 
-    # SUB.W D0, D1
-    data = bytearray.fromhex('0C5CFFFF')
+    # CMPI.W #$123,D3
+    data = bytearray.fromhex('0C430123')
 
     result = Cmpi.disassemble_instruction(data)
 
