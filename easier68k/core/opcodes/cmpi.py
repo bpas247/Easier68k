@@ -101,12 +101,56 @@ class Cmpi(Opcode):
         :return:
         """
 
+        # get the src and dest values
+        src_val = self.src.get_value(simulator, self.size.get_number_of_bytes())
+        dest_val = self.dest.get_value(simulator, self.size.get_number_of_bytes())
+
+        comparison = dest_val.get_value_signed() - src_val.get_value_signed()
+        raw_total = dest_val.get_value_unsigned() - src_val.get_value_unsigned()
+        comp_mv = dest_val - src_val
+
+        # mask out only the bits we need/want
+        comp_mv = MemoryValue(self.size,
+                              unsigned_int=mask_value_for_length(self.size, comp_mv.get_value_unsigned()))
+
+        print("comparison: " + str(comparison))
+        print("comp_mv: " + str(comp_mv))
+
+        negative = False
+
+        if self.size is OpSize.BYTE:
+            negative = comparison & 0x80 > 0
+        elif self.size is OpSize.WORD:
+            negative = comparison & 0x8000 > 0
+        elif self.size is OpSize.LONG:
+            negative = comparison & 0x80000000 > 0
+
+        # Overflow occurs when a sign change occurs where it shouldn't occur.
+        # For example: positive - negative != negative.
+        # This doesn't make sense, so an overflow occurs
+        overflow = False
+
+        if src_val.get_negative() is False:
+            if dest_val.get_negative() is True:
+                if raw_total > 0 and raw_total & 0x80000000 > 0:
+                    overflow = True
+
+        # set negative w/ (dest - src) < 0
+        simulator.set_condition_status_code(ConditionStatusCode.Negative, negative)
+        # set zero w/ (dest_val - src_val) == 0
+        simulator.set_condition_status_code(ConditionStatusCode.Zero, comparison == 0)
+        # set if an overflow occurs
+        simulator.set_condition_status_code(ConditionStatusCode.Overflow, overflow)
+        # set if a borrow occurs
+        # (this is the same as if src > dest)
+        simulator.set_condition_status_code(ConditionStatusCode.Carry, raw_total < 0)
+
         # set the number of bytes to increment equal to the length of the
         # instruction (1 word)
         to_increment = OpSize.WORD.value
 
         # Increment by size
-        to_increment += self.size.value
+        to_increment += OpSize.LONG.value if self.size == OpSize.LONG else OpSize.WORD.value
 
         # any additional increments by destination value
         if self.dest.mode is EAMode.AbsoluteLongAddress:
