@@ -95,7 +95,7 @@ class Cmpi(Opcode):
         :return:
         """
 
-        return None     # TODO implement the execution
+        print("TODO")   # TODO Implement
 
     def __str__(self):
         return 'CMPI Size {}, Src {}, Dest {}'.format(self.size, self.src, self.dest)
