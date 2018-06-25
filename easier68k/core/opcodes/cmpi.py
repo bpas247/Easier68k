@@ -113,9 +113,6 @@ class Cmpi(Opcode):
         comp_mv = MemoryValue(self.size,
                               unsigned_int=mask_value_for_length(self.size, comp_mv.get_value_unsigned()))
 
-        print("comparison: " + str(comparison))
-        print("comp_mv: " + str(comp_mv))
-
         negative = False
 
         if self.size is OpSize.BYTE:
