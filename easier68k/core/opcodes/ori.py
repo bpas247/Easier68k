@@ -42,15 +42,19 @@ class Ori(Opcode):
         ret_opcode = 0b00000000 << 8
 
         if self.size == OpSize.BYTE:
-            ret_opcode |= 0b00 << 7
+            ret_opcode |= 0b00 << 6
         elif self.size == OpSize.WORD:
-            ret_opcode |= 0b01 << 7
+            ret_opcode |= 0b01 << 6
         elif self.size == OpSize.LONG:
-            ret_opcode |= 0b10 << 7
+            ret_opcode |= 0b10 << 6
 
         ret_opcode |= ea_mode_bin.parse_from_ea_mode_modefirst(self.dest) << 0
 
+        print("ret_opcode: " + str(ret_opcode))
+
         ret_bytes = bytearray(ret_opcode.to_bytes(2, byteorder='big', signed=False))
+
+        ret_bytes.extend(opcode_util.ea_to_binary_post_op(self.src, self.size).get_value_bytearray())
 
         if self.dest.mode == EAMode.AWA or self.dest.mode == EAMode.ALA:
             ret_bytes.extend(opcode_util.ea_to_binary_post_op(self.dest, self.size).get_value_bytearray())
@@ -76,8 +80,7 @@ class Ori(Opcode):
         # increment the program counter by the length of the instruction (1 word)
         to_increment = OpSize.WORD.value
 
-        # if self.src.mode in [EAMode.Immediate]:
-            # add the length of the size of the operation, in words
+        # add the length of the size of the operation, in words
         if self.size is OpSize.BYTE:
             to_increment += OpSize.WORD.value
         else:
@@ -90,14 +93,9 @@ class Ori(Opcode):
         if self.dest.mode in [EAMode.AbsoluteWordAddress]:
             to_increment += OpSize.WORD.value
 
-        # TODO Derive the boolean expression of an inclusive OR operation.
-        result = dest_val  # OR operation: src_val | dest_val
-        result_unsigned = result.get_value_unsigned()
+        result_unsigned = src_val.get_value_unsigned() | dest_val.get_value_unsigned()
 
-        # set status codes
-        num_bits = OpSize.LONG.value*8
-        to_shift = num_bits-1 # this is how far to shift to get most significant bit
-        mask = 1 << num_bits
+        msb_bit = 0
 
         if self.size is OpSize.BYTE:
             msb_bit = 0x80
@@ -106,14 +104,13 @@ class Ori(Opcode):
         elif self.size is OpSize.LONG:
             msb_bit = 0x80000000
 
-
         simulator.set_condition_status_code(ConditionStatusCode.N, msb_bit & result_unsigned != 0)
         simulator.set_condition_status_code(ConditionStatusCode.Z, result_unsigned == 0)
         simulator.set_condition_status_code(ConditionStatusCode.V, False)
         simulator.set_condition_status_code(ConditionStatusCode.C, False)
 
         # and set the value
-        self.dest.set_value(simulator, result)
+        self.dest.set_value(simulator, MemoryValue(OpSize.LONG, unsigned_int=result_unsigned))
 
         # set the program counter value
         simulator.increment_program_counter(to_increment)
