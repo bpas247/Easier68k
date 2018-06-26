@@ -1,5 +1,5 @@
 """
-Test method for Sub opcode
+Test method for ORI opcode
 
 """
 
@@ -136,10 +136,6 @@ def test_ori_assemble():
 
     result = Ori.disassemble_instruction(data)
 
-    print(str(data))
-
     assm = result.assemble()
-
-    print(str(assm))
 
     assert data == assm

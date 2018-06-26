@@ -50,8 +50,6 @@ class Ori(Opcode):
 
         ret_opcode |= ea_mode_bin.parse_from_ea_mode_modefirst(self.dest) << 0
 
-        print("ret_opcode: " + str(ret_opcode))
-
         ret_bytes = bytearray(ret_opcode.to_bytes(2, byteorder='big', signed=False))
 
         ret_bytes.extend(opcode_util.ea_to_binary_post_op(self.src, self.size).get_value_bytearray())
