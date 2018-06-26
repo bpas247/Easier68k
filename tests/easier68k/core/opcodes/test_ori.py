@@ -54,7 +54,7 @@ def test_ori_negative():
 
     ori = Ori(params, OpSize.LONG)  # ORI.L #1,D2
 
-    run_opcode_test(sim, ori, Register.D2, 0xFFFFFFFF, 4, [False, True, False, False, False])
+    run_opcode_test(sim, ori, Register.D2, 0xFFFFFFFF, 6, [False, True, False, False, False])
 
 
 def test_subq_disassembles():
@@ -136,6 +136,10 @@ def test_ori_assemble():
 
     result = Ori.disassemble_instruction(data)
 
+    print(str(data))
+
     assm = result.assemble()
+
+    print(str(assm))
 
     assert data == assm
