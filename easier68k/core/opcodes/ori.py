@@ -243,6 +243,15 @@ class Ori(Opcode):
         >>> str(op.dest)
         'EA Mode: EAMode.DRD, Data: 7'
 
+        ORI.W #$FFFF, ($1234).W
+        >>> op = Ori.disassemble_instruction(bytearray.fromhex('0078FFFF1234'))
+
+        >>> str(op.src)
+        'EA Mode: EAMode.IMM, Data: 65535'
+
+        >>> str(op.dest)
+        'EA Mode: EAMode.AWA, Data: 4660'
+
         Parses some raw data into an instance of the opcode class
         :param data: The data used to convert into an opcode instance
         :return: The constructed instance or none if there was an error and
