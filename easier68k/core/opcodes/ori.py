@@ -272,7 +272,6 @@ class Ori(Opcode):
         src = None
         dest = None
         size = None
-        words_used = 1
 
         # determine the size
         if size_bin == 0b00:
@@ -285,10 +284,10 @@ class Ori(Opcode):
             return None
 
         # set the source
-        src = parse_ea_from_binary(0b111, 0b100, size, True, data[words_used * 2:])[0]
+        src = parse_ea_from_binary(0b111, 0b100, size, True, data[2:])[0]
 
         # set the destination
-        dest = parse_ea_from_binary(ea_mode_bin, ea_reg_bin, size, False, data[words_used * 2:])[0]
+        dest = parse_ea_from_binary(ea_mode_bin, ea_reg_bin, size, False, data[4:])[0]
 
         return cls([src, dest], size)
 
