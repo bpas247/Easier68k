@@ -75,7 +75,6 @@ class Eor(Opcode):
         # get the value of dest from the simulator
         dest_val = self.dest.get_value(simulator, val_length)
 
-
         # increment the program counter by the length of the instruction (1 word)
         to_increment = OpSize.WORD.value
 

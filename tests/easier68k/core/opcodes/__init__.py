@@ -5,5 +5,6 @@ __all__ = [
     'test_sub',
     'test_subq',
     'test_opcode_helper',
-    'test_adda'
+    'test_adda',
+    'test_eor',
 ]
