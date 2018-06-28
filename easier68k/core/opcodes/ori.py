@@ -11,6 +11,7 @@ from ..util.parsing import parse_assembly_parameter
 from ..enum.condition_status_code import ConditionStatusCode
 from ..models.memory_value import MemoryValue
 
+
 class Ori(Opcode):  # Forward declaration
     pass
 
@@ -60,7 +61,6 @@ class Ori(Opcode):
             ret_bytes.extend(opcode_util.ea_to_binary_post_op(self.dest, self.size).get_value_bytearray())
 
         return ret_bytes
-
 
     def execute(self, simulator: M68K):
         """
@@ -115,7 +115,6 @@ class Ori(Opcode):
         # set the program counter value
         simulator.increment_program_counter(to_increment)
 
-
     def __str__(self):
         return 'Ori command: size {}, src {}, dest {}'.format(self.size, self.src, self.dest)
 
@@ -126,7 +125,7 @@ class Ori(Opcode):
         :param command: The command string to check (e.g. 'MOVE.B', 'LEA', etc.)
         :return: Whether the string is an instance of this command type
         """
-        return opcode_util.command_matches(command, 'OR')
+        return opcode_util.command_matches(command, 'ORI')
 
     @classmethod
     def get_word_length(cls, command: str, parameters: str) -> int:
@@ -270,10 +269,6 @@ class Ori(Opcode):
 
         if opcode_bin != 0b00000000:
             return None
-
-        src = None
-        dest = None
-        size = None
 
         # determine the size
         if size_bin == 0b00:

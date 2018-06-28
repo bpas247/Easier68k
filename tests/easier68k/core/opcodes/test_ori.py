@@ -57,7 +57,7 @@ def test_ori_negative():
     run_opcode_test(sim, ori, Register.D2, 0xFFFFFFFF, 6, [False, True, False, False, False])
 
 
-def test_subq_disassembles():
+def test_ori_disassembles():
     """
     Test to see that sub can be assembled from some input
 
