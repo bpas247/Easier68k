@@ -82,7 +82,7 @@ class Eor(Opcode):
         if self.dest.mode in [EAMode.AbsoluteLongAddress]:
             to_increment += OpSize.LONG.value
 
-        if self.dest.mode in [EAMode.AbsoluteWordAddress]:
+        elif self.dest.mode in [EAMode.AbsoluteWordAddress]:
             to_increment += OpSize.WORD.value
 
         result_unsigned = src_val.get_value_unsigned() ^ dest_val.get_value_unsigned()
@@ -156,7 +156,7 @@ class Eor(Opcode):
         if dest.mode == EAMode.AWA:  # Appends a word
             length += 1
 
-        if dest.mode == EAMode.ALA:  # Appends a long, so 2 words
+        elif dest.mode == EAMode.ALA:  # Appends a long, so 2 words
             length += 2
 
         return length
