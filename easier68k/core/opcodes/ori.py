@@ -39,7 +39,9 @@ class Ori(Opcode):
         Assembles this opcode into hex to be inserted into memory
         :return: The hex version of this opcode
         """
-        ret_opcode = 0b00000000 << 8
+
+        # The first 8 bits are always 0
+        ret_opcode = 0
 
         if self.size == OpSize.BYTE:
             ret_opcode |= 0b00 << 6
