@@ -92,7 +92,7 @@ def test_ccr_carry():
 
     neg = Neg([AssemblyParameter(EAMode.DRD, 0)], OpSize.LONG)
 
-    run_opcode_test(sim, neg, Register.D0, 0x1FF, 2, [True, False, False, False, True])
+    run_opcode_test(sim, neg, Register.D0, 100, 2, [True, False, False, False, True])
 
 
 def test_ccr_overflow():
