@@ -110,13 +110,18 @@ class Neg(Opcode):
         negative = total & negative_bit > 0
 
         # Overflow occurs when a sign change occurs where it shouldn't occur.
-        # For example: positive - negative != negative.
+        # For example:   0 - positive != positive.
+        # other example: 0 - negative != negative
         # This doesn't make sense, so an overflow occurs
         overflow = False
 
-        if dest_val.get_value_unsigned() & 0x80000000 > 0:
-            if total & negative_bit == 0:
-                overflow = True
+        if total != 0:
+            if dest_val.get_value_unsigned() & negative_bit == 0:  # If it is positive
+                if total & negative_bit == 0:  # And total is positive
+                    overflow = True
+            elif dest_val.get_value_unsigned() & negative_bit > 0:  # If it is negative
+                if total & negative_bit > 0:  # If the total is negative
+                    overflow = True
 
         # Cleared if the result is 0.
         carry_bit = total != 0
