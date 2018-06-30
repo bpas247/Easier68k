@@ -37,7 +37,7 @@ class Neg(Opcode):
         :return: The hex version of this opcode
         """
 
-        # 1101 Dn xxx D x S xx M xxx Xn xxx
+        # 01000100 Signature xx Size xxx EAMode xxx EARegister
         # ret_opcode is the binary value which represents the assembled instruction
         ret_opcode = 0b01000100 << 8
 
