@@ -51,25 +51,6 @@ class Jsr(Opcode):
         :param simulator: The simulator to execute the command on
         :return: Nothing
         """
-        # get the value of src from the simulator
-        dest_val = self.dest.get_value(simulator, OpSize.LONG)
-        sp_val = simulator.get_register(Register.A7)
-        new_sp_val = sp_val.get_value_signed() - 4
-        pc_val = simulator.get_register(Register.PC)
-
-        # SP – 4 → Sp
-        simulator.set_register(Register.A7, MemoryValue(OpSize.LONG, signed_int=new_sp_val))
-
-        # TODO Currently does not work due to absolute address exceeding the size of 2^24
-        # PC → (SP)
-        # AssemblyParameter(EAMode.ARI, 7).set_value(simulator, MemoryValue(OpSize.LONG, signed_int=new_sp_val))
-
-        # Destination Address → PC
-        simulator.set_register(Register.PC, dest_val)
-
-        print("SP: " + str(AssemblyParameter(EAMode.ARD, 7).get_value(simulator, OpSize.LONG)))
-        print("(SP): " + str(new_sp_val))
-        print("PC: " + str(simulator.get_program_counter_value()))
 
         # increment the program counter by the length of the instruction (1 word)
         to_increment = OpSize.WORD.value
@@ -83,6 +64,22 @@ class Jsr(Opcode):
 
         # set the program counter value
         simulator.increment_program_counter(to_increment)
+
+        # get the value of src from the simulator
+        dest_val = self.dest.get_value(simulator, OpSize.LONG)
+        sp_val = simulator.get_register(Register.A7)
+        new_sp_val = sp_val.get_value_unsigned() - 4
+
+        # SP – 4 → SP
+        simulator.set_register(Register.A7, MemoryValue(OpSize.LONG, unsigned_int=new_sp_val))
+
+        pc_val = simulator.get_program_counter_value()
+
+        # PC → (SP)
+        AssemblyParameter(EAMode.ALA, new_sp_val).set_value(simulator, MemoryValue(OpSize.LONG, unsigned_int=pc_val))
+
+        # Destination Address → PC
+        simulator.set_register(Register.PC, dest_val)
 
     def __str__(self):
         # Makes this a bit easier to read in doctest output
