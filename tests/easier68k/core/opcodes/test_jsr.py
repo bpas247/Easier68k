@@ -51,6 +51,8 @@ def test_jsr_disassembles():
 
     sim = M68K()
 
+    sim.set_program_counter_value(0x1000)
+
     run_opcode_test(sim, result, Register.A7, 0xFFFFFC, 4, [False, False, False, False, False])
 
     assert sim.get_program_counter_value() == 0x6000
