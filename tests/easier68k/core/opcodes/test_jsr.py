@@ -25,9 +25,11 @@ def test_jsr():
 
     sim.set_program_counter_value(0x1000)
 
+    sim.set_register(Register.A7, MemoryValue(OpSize.LONG, unsigned_int=0x1000000))
+
     jsr = Jsr([AssemblyParameter(EAMode.AWA, 0x4000)])
 
-    run_opcode_test(sim, jsr, Register.A7, 0xFFFFFC, 4, [False, False, False, False, False])
+    run_opcode_test(sim, jsr, Register.A7, 0xFFFFFC, [False, False, False, False, False])
 
     assert sim.get_program_counter_value() == 0x4000
 
@@ -53,7 +55,9 @@ def test_jsr_disassembles():
 
     sim.set_program_counter_value(0x1000)
 
-    run_opcode_test(sim, result, Register.A7, 0xFFFFFC, 4, [False, False, False, False, False])
+    sim.set_register(Register.A7, MemoryValue(OpSize.LONG, unsigned_int=0x1000000))
+
+    run_opcode_test(sim, result, Register.A7, 0xFFFFFC, [False, False, False, False, False])
 
     assert sim.get_program_counter_value() == 0x6000
 
