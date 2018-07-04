@@ -10,7 +10,16 @@ from ..enum.register import Register
 
 
 class Rts(Opcode):
-
+    """
+    RTS: Return from Subroutine
+    Operation: (SP) -> PC; SP + 4 -> SP
+    Assembler Syntax: RTS
+    Attributes: Unsized
+    Description: Pulls the program counter value from the stack.
+                 The previous program counter value is lost.
+    Condition Codes: Not affected
+    Instruction Format: 0100111001110101
+    """
     def __init__(self):
         pass    # Doesn't need to do anything else
 
