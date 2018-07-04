@@ -42,7 +42,7 @@ class Rts(Opcode):
         :return: Nothing
         """
 
-        # (SP) → PC
+        # (SP) -> PC
         sp_val = AssemblyParameter(EAMode.ARI, 7).get_value(simulator, OpSize.LONG)
         simulator.set_program_counter_value(sp_val.get_value_unsigned())
 
@@ -50,7 +50,7 @@ class Rts(Opcode):
         sp_val = simulator.get_register(Register.A7)
         new_sp_val = sp_val.get_value_unsigned() + 4
 
-        # SP + 4 → SP
+        # SP + 4 -> SP
         simulator.set_register(Register.A7, MemoryValue(OpSize.LONG, unsigned_int=new_sp_val))
 
     def __str__(self):
