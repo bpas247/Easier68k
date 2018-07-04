@@ -12,11 +12,31 @@ from ..enum.condition_status_code import ConditionStatusCode
 from ..models.memory_value import MemoryValue
 
 
-class Neg(Opcode):  # Forward declaration
-    pass
-
-
 class Neg(Opcode):
+    """
+    NEG: Negate
+    Operation: 0 - Destination -> Destination
+    Assembler Syntax: NEG <ea>
+    Attributes: Size = (Byte, Word, Long)
+    Description: Subtracts the destination operand from zero
+                 and stores the result in the destination location.
+                 The size of the operation is specified as byte, word, or long.
+    Condition Codes: X - Set the same as the carry bit.
+                     N - Set if the result is negative; cleared otherwise.
+                     Z - Set if the result is zero; cleared otherwise.
+                     V - Set if an overflow occurs; cleared otherwise.
+                     C - Cleared if the result is zero; set otherwise.
+    Instruction Format: 01000100 Signature xx Size xxx EAMode xxx EARegister
+    Instruction Fields:
+        Size field - Specifies the size of the operation.
+            00 - Byte operation.
+            01 - Word operation.
+            10 - Long operation.
+        Effective Address field - Specifies the address of the next instruction.
+                                  Only data alterable addressing modes can be used.
+            Valid Modes - Dn, (An), (An)+, -(An), (xxx).W, (xxx).L
+    """
+
     # Allowed sizes for this opcode
     valid_sizes = [OpSize.BYTE, OpSize.WORD, OpSize.LONG]
 
