@@ -9,10 +9,6 @@ from ..models.memory_value import MemoryValue
 from ..enum.register import Register
 
 
-class Rts(Opcode):  # Forward declaration
-    pass
-
-
 class Rts(Opcode):
 
     def __init__(self):
