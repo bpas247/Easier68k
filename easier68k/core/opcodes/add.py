@@ -18,6 +18,49 @@ class Add(Opcode):  # Forward declaration
 
 
 class Add(Opcode):
+    """
+    ADD: Add
+    Operation: Source + Destination -> Destination
+    Assembler Syntax: ADD <ea>, Dn
+                      ADD Dn, <ea>
+    Attributes: Size = (Byte, Word, Long)
+    Description: Adds the source operand to the destination operand using binary addition
+                 and stores the result in the destination location.
+                 The size of the operation may be specified as byte, word, or long.
+                 The mode of the instruction indicates which operand is the source and which is the
+                 destination, as well as the operand size.
+    Condition Codes: X - Not affected
+                     N - Set if the result is negative; cleared otherwise.
+                     Z - Set if the result is zero; cleared otherwise.
+                     V - Set if an overflow occurs; cleared otherwise.
+                     C - Set if a carry occurs; cleared otherwise.
+    Instruction Format: 1101 Signature xxx Register xxx OPMODE xxx EAMode xxx EARegister
+    Instruction Fields:
+        Register field - Specifies any of the eight data registers.
+
+        Opmode field [Operation: <ea> + Dn -> Dn]
+            000 - Byte
+            001 - Word
+            010 - Long
+
+        Opmode field [Operation: Dn + <ea> -> <ea>]
+            100 - Byte
+            101 - Word
+            110 - Long
+
+        Effective Address field - Determines addressing mode.
+            a. If the location specified is a source operand, all addressing modes can be used.
+                Valid Modes - All (Word and Long size only for An)
+            b. If the location specified is a destination operand, only memory alterable addressing modes can be used.
+                Valid Modes - (An), (An)+, -(An), (xxx).W, (xxx).L
+
+        NOTE: The Dn mode is used when the destination is a data register;
+              the destination < ea > mode is invalid for a data register.
+              ADDA is used when the destination is an address register.
+              ADDI and ADDQ are used when the source is immediate data.
+              Most assemblers automatically make this distinction.
+    """
+
     # Allowed sizes for this opcode
     valid_sizes = [OpSize.BYTE, OpSize.WORD, OpSize.LONG]
 
@@ -47,7 +90,7 @@ class Add(Opcode):
         :return: The hex version of this opcode
         """
 
-        # 1101 Dn xxx D x S xx M xxx Xn xxx
+        # 1101 Signature xxx Register xxx OPMODE xxx EAMode xxx EARegister
         # ret_opcode is the binary value which represents the assembled instruction
         ret_opcode = 0b1101 << 12
 
