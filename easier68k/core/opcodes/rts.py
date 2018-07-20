@@ -7,6 +7,7 @@ from ...core.util import opcode_util
 from ..models.assembly_parameter import AssemblyParameter
 from ..models.memory_value import MemoryValue
 from ..enum.register import Register
+from typing import Union
 
 
 class Rts(Opcode):
@@ -124,7 +125,7 @@ class Rts(Opcode):
             return False, issues
 
     @classmethod
-    def disassemble_instruction(cls, data: bytearray) -> Opcode:
+    def disassemble_instruction(cls, data: bytearray) -> Union[Opcode, None]:
         """
         This has a non-RTS opcode
         >>> Rts.disassemble_instruction(bytearray.fromhex('0280'))
