@@ -8,9 +8,13 @@ __all__ = [
     'opcode_or',
     'eor',
     'add',
+    'adda',
+    'cmp',
+    'cmpi',
     'sub',
     'subq',
     'adda',
     'jsr',
-    'rts'
+    'rts',
+    'neg'
 ]

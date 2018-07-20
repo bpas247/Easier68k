@@ -1,14 +1,18 @@
 __all__ = [
-    'test_move',
+    'test_add',
+    'test_adda',
+    'test_cmp',
+    'test_cmpi',
+    'test_eor',
+    'test_jsr',
     'test_lea',
-    'test_trap',
-    'test_sub',
-    'test_subq',
+    'test_move',
+    'test_neg',
     'test_opcode_helper',
     'test_or',
     'test_ori',
-    'test_eor',
-    'test_adda',
-    'test_jsr',
-    'test_rts'
+    'test_rts',
+    'test_sub',
+    'test_subq',
+    'test_trap'
 ]

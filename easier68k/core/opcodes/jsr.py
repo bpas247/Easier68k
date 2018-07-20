@@ -9,14 +9,25 @@ from ..util.parsing import parse_assembly_parameter
 from ..models.assembly_parameter import AssemblyParameter
 from ..models.memory_value import MemoryValue
 from ..enum.register import Register
-
-
-class Jsr(Opcode):  # Forward declaration
-    pass
+from typing import Union
 
 
 class Jsr(Opcode):
-
+    """
+    JSR: Jump to Subroutine
+    Operation: SP - 4 -> SP; PC -> (SP); Destination Address -> PC
+    Assembler Syntax: JSR <ea>
+    Attributes: Unsized
+    Description: Pushes the long-word address of the instruction immediately following the JSR instruction
+                 onto the system stack. Program execution then continues
+                 at the address specified in the instruction.
+    Condition Codes: Not affected
+    Instruction Format: 0100111010 Signature xxx EAMode xxx EARegister
+    Instruction Field:
+        Effective Address field - Speciﬁes the address of the next instruction.
+                                  Only control addressing modes can be used as listed in the following tables.
+        Valid Modes - (An), (xxx).W, (xxx).L
+    """
     def __init__(self, params: list):
         assert len(params) == 1
         assert isinstance(params[0], AssemblyParameter)
@@ -49,7 +60,7 @@ class Jsr(Opcode):
         """
         Executes this command in a simulator
         :param simulator: The simulator to execute the command on
-        :return: Nothing
+        :return: None
         """
 
         # increment the program counter by the length of the instruction (1 word)
@@ -70,15 +81,15 @@ class Jsr(Opcode):
         sp_val = simulator.get_register(Register.A7)
         new_sp_val = sp_val.get_value_unsigned() - 4
 
-        # SP – 4 → SP
+        # SP – 4 -> SP
         simulator.set_register(Register.A7, MemoryValue(OpSize.LONG, unsigned_int=new_sp_val))
 
         pc_val = simulator.get_program_counter_value()
 
-        # PC → (SP)
+        # PC -> (SP)
         AssemblyParameter(EAMode.ALA, new_sp_val).set_value(simulator, MemoryValue(OpSize.LONG, unsigned_int=pc_val))
 
-        # Destination Address → PC
+        # Destination Address -> PC
         simulator.set_register(Register.PC, dest_val)
 
     def __str__(self):
@@ -170,7 +181,7 @@ class Jsr(Opcode):
                                                                                                  EAMode.IMM]])[:2]
 
     @classmethod
-    def disassemble_instruction(cls, data: bytearray) -> Opcode:
+    def disassemble_instruction(cls, data: bytearray) -> Union[Opcode, None]:
         """
         This has a non-JSR opcode
         >>> Jsr.disassemble_instruction(bytearray.fromhex('0280'))

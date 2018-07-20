@@ -28,6 +28,7 @@ test_modules = [
     'easier68k.core.opcodes.jsr',
     'easier68k.core.opcodes.rts',
     'easier68k.core.opcodes.lea',
+    'easier68k.core.opcodes.neg',
     'easier68k.core.opcodes.simhalt',
     'easier68k.core.opcodes.trap',
     'easier68k.core.models.list_file',
@@ -35,7 +36,9 @@ test_modules = [
     'easier68k.core.enum.ea_mode_bin',
     'easier68k.core.models.list_file',
     'easier68k.core.util.opcode_util',
-    'easier68k.core.enum.op_size'
+    'easier68k.core.enum.op_size',
+    'easier68k.core.opcodes.cmp',
+    'easier68k.core.opcodes.cmpi'
 ]
 
 def load_tests(tests):
