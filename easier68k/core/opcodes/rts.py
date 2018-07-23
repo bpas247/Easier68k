@@ -34,7 +34,7 @@ class Rts(Opcode):
         # ret_opcode is the binary value which represents the assembled instruction
         ret_opcode = 0b0100111001110101
 
-        return bytearray(ret_opcode.to_bytes(2, byteorder='big', signed=False))
+        return bytearray(ret_opcode.to_bytes(OpSize.WORD.value, byteorder='big', signed=False))
 
     def execute(self, simulator: M68K):
         """
@@ -44,12 +44,13 @@ class Rts(Opcode):
         """
 
         # (SP) -> PC
-        sp_val = AssemblyParameter(EAMode.ARI, 7).get_value(simulator, OpSize.LONG)
+        sp = 7  # Register A7 is SP
+        sp_val = AssemblyParameter(EAMode.ARI, sp).get_value(simulator, OpSize.LONG)
         simulator.set_program_counter_value(sp_val.get_value_unsigned())
 
         # get the value of src from the simulator
         sp_val = simulator.get_register(Register.A7)
-        new_sp_val = sp_val.get_value_unsigned() + 4
+        new_sp_val = sp_val.get_value_unsigned() + OpSize.LONG.value    # The address is a long word address
 
         # SP + 4 -> SP
         simulator.set_register(Register.A7, MemoryValue(OpSize.LONG, unsigned_int=new_sp_val))
