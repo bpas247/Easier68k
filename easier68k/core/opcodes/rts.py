@@ -1,3 +1,4 @@
+from typing import Union
 from ...core.enum.ea_mode import EAMode
 from ...core.enum.op_size import OpSize
 from ...simulator.m68k import M68K
@@ -7,7 +8,6 @@ from ...core.util import opcode_util
 from ..models.assembly_parameter import AssemblyParameter
 from ..models.memory_value import MemoryValue
 from ..enum.register import Register
-from typing import Union
 
 
 class Rts(Opcode):
@@ -44,13 +44,14 @@ class Rts(Opcode):
         """
 
         # (SP) -> PC
-        sp = 7  # Register A7 is SP
-        sp_val = AssemblyParameter(EAMode.ARI, sp).get_value(simulator, OpSize.LONG)
+        step_counter = 7  # Register A7 is SP
+        sp_val = AssemblyParameter(EAMode.ARI, step_counter).get_value(simulator, OpSize.LONG)
         simulator.set_program_counter_value(sp_val.get_value_unsigned())
 
         # get the value of src from the simulator
         sp_val = simulator.get_register(Register.A7)
-        new_sp_val = sp_val.get_value_unsigned() + OpSize.LONG.value    # The address is a long word address
+        # The address is a long word address
+        new_sp_val = sp_val.get_value_unsigned() + OpSize.LONG.value
 
         # SP + 4 -> SP
         simulator.set_register(Register.A7, MemoryValue(OpSize.LONG, unsigned_int=new_sp_val))
@@ -82,7 +83,10 @@ class Rts(Opcode):
         :param parameters: The parameters after the command
         :return: The length of the bytes in memory in words
         """
-        assert parameters is None or parameters.strip(' ') == ""   # OPCODE does not have any parameters
+        # Ensure correct OPCODE
+        assert command.strip(' ') == 'RTS'
+        # OPCODE does not have any parameters
+        assert parameters is None or parameters.strip(' ') == ""
         return 1
 
     @classmethod
@@ -112,7 +116,8 @@ class Rts(Opcode):
         False
 
         :param command: The command itself (e.g. 'MOVE.B', 'LEA', etc.)
-        :param parameters: The parameters after the command (such as the source and destination of a move)
+        :param parameters: The parameters after the command
+                           (such as the source and destination of a move)
         :return: Whether the given command is valid and a list of issues/warnings encountered
         """
         issues = []
@@ -121,8 +126,8 @@ class Rts(Opcode):
             assert not parameters.strip(), 'RTS takes no parameters'
 
             return True, issues
-        except AssertionError as e:
-            issues.append((e.args[0], 'ERROR'))
+        except AssertionError as error:
+            issues.append((error.args[0], 'ERROR'))
             return False, issues
 
     @classmethod
@@ -158,13 +163,19 @@ class Rts(Opcode):
     @classmethod
     def from_str(cls, command: str, parameters: str):
         """
-        Parses a JSR command from text.
+        Parses a RTS command from text.
 
         >>> str(Rts.from_str('RTS', ''))
         'Rts command'
 
         :param command: The command itself (e.g. 'MOVE.B', 'LEA', etc.)
-        :param parameters: The parameters after the command (such as the source and destination of a move)
+        :param parameters: The parameters after the command
+                           (such as the source and destination of a move)
         :return: The parsed command
         """
+        # Ensure correct OPCODE
+        assert command.strip(' ') == 'RTS'
+        # OPCODE does not have any parameters
+        assert parameters is None or parameters.strip(' ') == ""
+
         return cls()
