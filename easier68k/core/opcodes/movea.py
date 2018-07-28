@@ -66,8 +66,11 @@ class Movea(Opcode):
 
         ret_bytes = bytearray(ret_opcode.to_bytes(2, byteorder='big', signed=False))
 
-        if self.src.mode == EAMode.IMM or self.src.mode == EAMode.AWA or self.src.mode == EAMode.ALA:
-            ret_bytes.extend(opcode_util.ea_to_binary_post_op(self.src, self.size).get_value_bytearray())
+        src_mode = self.src.mode
+
+        if src_mode == EAMode.IMM or src_mode == EAMode.AWA or src_mode == EAMode.ALA:
+            to_extend = opcode_util.ea_to_binary_post_op(self.src, self.size).get_value_bytearray()
+            ret_bytes.extend(to_extend)
 
         return ret_bytes
 
@@ -147,7 +150,8 @@ class Movea(Opcode):
         Gets what the end length of this command will be in memory
         :param command: The text of the command itself (e.g. "LEA", "MOVE.B", etc.)
         :param parameters: The parameters after the command
-        :return: The length of the bytes in memory in words, as well as a list of warnings or errors encountered
+        :return: The length of the bytes in memory in words,
+                 as well as a list of warnings or errors encountered
         """
         valid, issues = cls.is_valid(command, parameters)
         if not valid:
@@ -167,11 +171,13 @@ class Movea(Opcode):
             issues.append(('Invalid syntax (missing a parameter/too many parameters)', 'ERROR'))
             return 0
 
-        src = parse_assembly_parameter(params[0].strip())  # Parse the source and make sure it parsed right
+        # Parse the source and make sure it parsed right
+        src = parse_assembly_parameter(params[0].strip())
 
         length = 1  # Always 1 word not counting additions to end
 
-        if src.mode == EAMode.IMM:  # If we're moving an immediate we have to append the value afterwards
+        # If we're moving an immediate we have to append the value afterwards
+        if src.mode == EAMode.IMM:
             if size == OpSize.LONG:
                 length += 2
             else:
@@ -207,7 +213,8 @@ class Movea(Opcode):
         True
 
         :param command: The command itself (e.g. 'MOVE.B', 'LEA', etc.)
-        :param parameters: The parameters after the command (such as the source and destination of a move)
+        :param parameters: The parameters after the command
+                           (such as the source and destination of a move)
         :return: Whether the given command is valid and a list of issues/warnings encountered
         """
         return opcode_util.n_param_is_valid(command, parameters, "MOVEA", 2, Movea.valid_sizes)
@@ -282,12 +289,12 @@ class Movea(Opcode):
 
         size = OpSize.WORD if size_bin == 0b11 else OpSize.LONG
 
-        src_EA = parse_ea_from_binary(ea_mode, ea_reg, size, True, data[OpSize.WORD.value:])
+        src_ea = parse_ea_from_binary(ea_mode, ea_reg, size, True, data[OpSize.WORD.value:])
 
-        dest_EA = AssemblyParameter(EAMode.ARD, register_bin)
+        dest_ea = AssemblyParameter(EAMode.ARD, register_bin)
 
         # when making the new Move, need to convert that MoveSize back into an OpSize
-        return cls((src_EA[0], dest_EA), size)
+        return cls([src_ea[0], dest_ea], size)
 
     @classmethod
     def from_str(cls, command: str, parameters: str):
@@ -301,7 +308,8 @@ class Movea(Opcode):
         'Movea command: Size OpSize.LONG, src EA Mode: EAMode.ARIPI, Data: 0, dest EA Mode: EAMode.ARD, Data: 4'
 
         :param command: The command itself (e.g. 'MOVE.B', 'LEA', etc.)
-        :param parameters: The parameters after the command (such as the source and destination of a move)
+        :param parameters: The parameters after the command
+                           (such as the source and destination of a move)
         :return: The parsed command
         """
         return opcode_util.n_param_from_str(command, parameters, Movea, 2, OpSize.WORD)
