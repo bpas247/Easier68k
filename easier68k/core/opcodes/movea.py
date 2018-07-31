@@ -78,7 +78,7 @@ class Movea(Opcode):
         """
         Executes this command in a simulator
         :param simulator: The simulator to execute the command on
-        :return: Nothing
+        :return: None
         """
         # get the length
         val_length = self.size.get_number_of_bytes()
@@ -101,8 +101,6 @@ class Movea(Opcode):
         # same goes with a word
         elif self.src.mode in [EAMode.AbsoluteWordAddress]:
             to_increment += OpSize.WORD.value
-
-        print(str(to_increment))
 
         # set the program counter value
         simulator.increment_program_counter(to_increment)
